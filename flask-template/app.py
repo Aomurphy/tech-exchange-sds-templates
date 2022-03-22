@@ -61,12 +61,12 @@ capital_dic={
     'Wisconsin': 'Madison',
     'Wyoming': 'Cheyenne'  
 } 
+previous_correct=[]
 app = Flask('app')
-
 @app.route('/scorepage',methods=["POST","GET"])
+
 def output():
-  correctA=0
-  previous_correct=[]
+  correctA=len(previous_correct)
   for state in state_names:
     if request.method=="POST":
         answer = request.form['capital']
@@ -74,13 +74,12 @@ def output():
         correct = answer == capital_dic[state]
         if(correct):
             previous_correct.append(answer)  
-            correctA+=1
+            correctA=len(previous_correct)
   return render_template("scorepage.html", previous_correct=previous_correct,correct=correctA)
   
 @app.route('/')
 def hello_world():
-  
-  return render_template("index.html",state_names=state_names)
+  return render_template("index.html",state_names=state_names,correctA=0)
 
 
 app.run(host='0.0.0.0', port=8080)
